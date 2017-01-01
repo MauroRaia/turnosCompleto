@@ -7,9 +7,7 @@ import datetime
 class HorarioTurno(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    dia = models.DateField()
-    horaInicio = models.TimeField()
-    horaFin = models.TimeField()
+    hora = models.TimeField()
 
     def __str__(self):
         if str(self.dia)[0:4]=="2016":
@@ -26,6 +24,7 @@ class HorarioTurno(models.Model):
             return 'dia: ' + str(self.dia) + ' | ' + str(self.horaInicio)[0:5] + ' - ' + str(self.horaFin)[0:5]
 
 class Especialidad(models.Model):
+    doctor = models.ManyToManyField('Medico')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     nombre = models.CharField(max_length=50,blank=False)
@@ -79,7 +78,7 @@ class Medico(models.Model):
     dni = models.IntegerField(blank=False)
     telefono = models.IntegerField(blank=True)
     correo = models.CharField(max_length=100,blank=True)
-    especialidad = models.ForeignKey('Especialidad')
+    espec = models.ManyToManyField('Especialidad')
     horario = models.ManyToManyField('HorarioTrabajo')
     estaActivo = models.BooleanField(default=True)
     #duracionMinimaTurno
@@ -151,12 +150,9 @@ class Turno(models.Model):
     estado = models.CharField(max_length=4,choices=opcionesEstado,default=pendiente)
     medico = models.ForeignKey('Medico')
     paciente = models.ForeignKey('Paciente')
+    dia = models.DateField()
     horario = models.ForeignKey('HorarioTurno')
-    '''
-    con tratamiento no puedo hacer lo mismo que con estado dado que las opciones en este estan hardcodeadas, son fijas,
-     estan sujetas al codigo; por otro lado los tratamientos tiene que poder crearlos el medico porque yo no conosco los susodichos,
-     como tambien puede surgir nuevos
-    '''
+    especialidad = models.ForeignKey('Especialidad')
     tratamiento = models.ForeignKey('Tratamiento')
     estaActivo = models.BooleanField(default=True)
 
