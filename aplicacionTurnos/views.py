@@ -111,7 +111,7 @@ def cambioDia(request, dia):
             return redirect('/cambioDia/'+str(turno.horario.dia))
     else:
         form = turnoForm()
-    turnos = Turno.objects.filter(horario__dia= dia, estaActivo = True)
+    turnos = Turno.objects.filter(dia=dia, estaActivo=True)
     medicos= Medico.objects.filter(estaActivo = True)
     return render(request, 'aplicacionTurnos/home.html', {'today':dia, 'turnos':turnos, 'medicos':medicos, 'form':form})
     #return render(request, 'aplicacionTurnos/home.html', {'today':dia})

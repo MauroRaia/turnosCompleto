@@ -4,25 +4,6 @@ from django.utils import timezone
 import datetime
 # Create your models here.
 
-class HorarioTurno(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    hora = models.TimeField()
-
-    def __str__(self):
-        if str(self.dia)[0:4]=="2016":
-            '''
-            En caso de que el ano sea 2016, solo voy a mostrar el dia y el mes del "turno"; de ser otro ano, este se especificara.
-            A su vez tambien no muestro los segundos de la hora, solo porque me parece informacion relativamente despreciable en pos
-             de una mayor facilidad de lectura
-            Estas dos cosas lo hago convirtiendo el dia y la hora en strings y luego dado que python trata a los string
-             como listas, los trunco. Entre los corchetes se indica desde que caracter se toma, luego van dos puntos (:) y cual es el
-             caracter limite (este no sera tomado); si no se indica un caracter limite, se tomara hasta el final del string
-            '''
-            return 'dia: ' + str(self.dia)[5:] + ' | ' + str(self.horaInicio)[0:5] + ' - ' + str(self.horaFin)[0:5]
-        else:
-            return 'dia: ' + str(self.dia) + ' | ' + str(self.horaInicio)[0:5] + ' - ' + str(self.horaFin)[0:5]
-
 class Especialidad(models.Model):
     doctor = models.ManyToManyField('Medico')
     created = models.DateTimeField(auto_now_add=True)
@@ -151,7 +132,9 @@ class Turno(models.Model):
     medico = models.ForeignKey('Medico')
     paciente = models.ForeignKey('Paciente')
     dia = models.DateField()
-    horario = models.ForeignKey('HorarioTurno')
+
+    horario = models.TimeField()
+
     especialidad = models.ForeignKey('Especialidad')
     tratamiento = models.ForeignKey('Tratamiento')
     estaActivo = models.BooleanField(default=True)
