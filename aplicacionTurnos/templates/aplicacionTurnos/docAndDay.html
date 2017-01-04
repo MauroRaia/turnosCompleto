@@ -1,15 +1,44 @@
-{% extends 'aplicacionTurnos/baseABM.html' %}
+
 <head>
     {% load widget_tweaks %} {% load bootstrap %}
-    <script src="/static/js/datepicker.js"></script>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!---Bootstrap and custom styles--->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/footer.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/header-user-dropdown.css">
+    <!---Estilos Calendario--->
+    <link href='../static/css/fullcalendar.css' rel='stylesheet' />
+    <link href='../static/css/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <!--Scripts Calendario-->
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>
+    <script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
+
+    <!---Script librerias externas--->
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <title>Consultorio Odontologico</title>
+
+    <!---Inicio Script calendario (SACAR)--->
     <script>
-      window.addEvent('load', function() {
-        new DatePicker('.demo_allow_empty', {
-          pickerClass: 'datepicker_dashboard',
-          allowEmpty: true
+        $(document).ready(function() {
+            $('#calendarioCalendario').fullCalendar({
+                height: 260,
+                defaultDate: '2017-01-05',
+                editable: true,
+                eventLimit: true,
+                dayClick: function(date, jsEvent, view) {
+                    document.getElementById("date").value = date.format();
+                }
+            });
         });
-      });
     </script>
+    <!---Fin Script calendario (SACAR)--->
 </head>
 
         {% block ABM %}
@@ -19,13 +48,13 @@
               <br>
               <select name="doc">
                 {% for m in medicos %}
-                <option value="{{m}}">{{m.nombre}}' '{{m.apellido}}</option>
+                <option value="{{m.pk}}">{{m.nombre}} {{m.apellido}}</option>
                 {% endfor %}
               </select>
-
-              <label>Datepicker starting at and allowing no value:</label>
-              <input name='date_allow_empty' type='text' value='' class='date demo_allow_empty' />
-
+              <input type="text" id='date' name='date' value="Elegir fecha"/>
+              <div id='calendario'>
+                  <div id='calendarioCalendario'></div>
+              </div>
               <br>
               <div class="pull-right">
                 <input type="submit" class="btn btn-success" value="Guardar"/>

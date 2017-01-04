@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^editarObraSocial/(?P<pk>[0-9]+)/$', views.editarObraSocial),
     url(r'^eliminarObraSocial/(?P<pk>[0-9]+)/$', views.eliminarObraSocial),
     #url(r'^nuevoTurno$', views.nuevoTurno),
-    url(r'^nuevoTurno$', views.home),
+    url(r'^nuevoTurno/(?P<doc>\S+)/(?P<dia>\S+)$', views.nuevoTurno, name='nuevoTurno'),
     url(r'^editarTurno/(?P<pk>[0-9]+)/$', views.editarTurno),
     url(r'^eliminarTurno/(?P<pk>[0-9]+)/$', views.eliminarTurno),
     #url(r'^eliminarTurno/(?P<pk>[0-9]+)/(?P<dia>[-\w]+)/$', views.eliminarTurno),

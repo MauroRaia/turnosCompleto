@@ -337,17 +337,17 @@ def eliminarEspecialidad(request , pk):
 def docAndDay(request):
     medicos = Medico.objects.all()
     if request.method == 'POST':
-        doc = request.POST['doc']
-        dia = request.POST['dia']
-        return redirect('aplicacionTurnos.views.nuevoTurno(doc, dia)')
+        doc = request.POST.get('doc')
+        dia = request.POST.get('date')
+#        return redirect('nuevoTurno/{doc}/{dia}'.format(doc=doc, dia=dia))
+        return nuevoTurno(request, doc, dia)
     else:
         return render(request, 'aplicacionTurnos/docAndDay.html', {'medicos':medicos})
 
 @login_required
 def nuevoTurno(request, doc, dia):
 
-    turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
-    turnos_doc = Turno.objects.filter(estaActivo=True, medico=doc, horario__isnull=True).order_by('horario')
+    turnos_doc = Turno.objects.filter(estaActivo=True, pk=doc, horario__isnull=True).order_by('horario')
 
     doc_horario = getattr(doc, 'horario')
     doc_inicio = getattr(doc_horario, 'horaInicio')
@@ -366,9 +366,15 @@ def nuevoTurno(request, doc, dia):
             form.save(commit=True)
             return redirect('/nuevoTurno')
     else:
-        form = turnoForm()
-    return redirect('/')
-    #return render(request, 'aplicacionTurnos/nuevoTurno.html', {'form': form, 'turnos':turnos})
+        turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
+        form = turnoForm(request.POST, initial={
+        'estado':pendiente,
+        'medico':doc,
+        'especialidad':doc.espec,
+        'dia':dia,
+        'horarios':horarios
+        })
+        return render(request, 'aplicacionTurnos/nuevoTurno.html', {'form': form, 'turnos':turnos})
 
 @login_required
 def editarTurno(request, pk):
