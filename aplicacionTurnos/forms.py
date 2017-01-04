@@ -47,8 +47,8 @@ class turnoForm(forms.ModelForm):
         model = Turno
         fields = '__all__'
         widgets = {
-            'estado': forms.HiddenInput(),
             'estaActivo': forms.HiddenInput(),
+            'horarios': forms.HiddenInput()
             }
 
 

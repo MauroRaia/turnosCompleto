@@ -334,10 +334,34 @@ def eliminarEspecialidad(request , pk):
 
 "AMB Turno"
 @login_required
-def nuevoTurno(request):
-    turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
+def docAndDay(request):
+    medicos = Medico.objects.all()
     if request.method == 'POST':
-        form = turnoForm(request.POST)
+        doc = request.POST['doc']
+        dia = request.POST['dia']
+        return redirect('aplicacionTurnos.views.nuevoTurno(doc, dia)')
+    else:
+        return render(request, 'aplicacionTurnos/docAndDay.html', {'medicos':medicos})
+
+@login_required
+def nuevoTurno(request, doc, dia):
+
+    turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
+    turnos_doc = Turno.objects.filter(estaActivo=True, medico=doc, horario__isnull=True).order_by('horario')
+
+    doc_horario = getattr(doc, 'horario')
+    doc_inicio = getattr(doc_horario, 'horaInicio')
+    doc_fin = getattr(doc_horario, 'horaFin')
+    horarios = crearHorarios(doc_inicio, doc_fin)
+
+    if request.method == 'POST':
+        form = turnoForm(request.POST, initial={
+        'estado':pendiente,
+        'medico':doc,
+        'especialidad':doc.espec,
+        'dia':dia,
+        'horarios':horarios
+        })
         if form.is_valid():
             form.save(commit=True)
             return redirect('/nuevoTurno')
@@ -516,3 +540,13 @@ def busquedaObraSocial(request):
     else:
         form = obraSocialForm()
     return render(request, 'aplicacionTurnos/nuevoObraSocial.html',{'form':form, 'obrasSociales':results})
+
+def crearHorarios(inicio, fin):
+    sec_inicio = inicio.total_seconds()
+    sec_fin = fin.total_seconds()
+    horarios = []
+    h = sec_inicio
+    while (h < sec_fin):
+        horarios.append(datetime.timedelta(seconds=h))
+        h = h + 900
+    return horarios

@@ -1,0 +1,38 @@
+{% extends 'aplicacionTurnos/baseABM.html' %}
+<head>
+    {% load widget_tweaks %} {% load bootstrap %}
+    <script src="/static/js/datepicker.js"></script>
+    <script>
+      window.addEvent('load', function() {
+        new DatePicker('.demo_allow_empty', {
+          pickerClass: 'datepicker_dashboard',
+          allowEmpty: true
+        });
+      });
+    </script>
+</head>
+
+        {% block ABM %}
+            <form method="POST">
+              {% csrf_token %}
+              <h2>Medico</h2>
+              <br>
+              <select name="doc">
+                {% for m in medicos %}
+                <option value="{{m}}">{{m.nombre}}' '{{m.apellido}}</option>
+                {% endfor %}
+              </select>
+
+              <label>Datepicker starting at and allowing no value:</label>
+              <input name='date_allow_empty' type='text' value='' class='date demo_allow_empty' />
+
+              <br>
+              <div class="pull-right">
+                <input type="submit" class="btn btn-success" value="Guardar"/>
+              </div>
+            </form>
+            {% endblock%}
+
+    {% block tablas %}
+
+    {% endblock %}

@@ -5,7 +5,6 @@ import datetime
 # Create your models here.
 
 class Especialidad(models.Model):
-    doctor = models.ManyToManyField('Medico')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     nombre = models.CharField(max_length=50,blank=False)
@@ -109,8 +108,6 @@ class Tratamiento(models.Model):
 
 
 class Turno(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     '''
     creo las opciones que puede elegirse en estado
     '''

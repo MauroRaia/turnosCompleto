@@ -60,9 +60,7 @@
                 </form>-->
                 <form method="POST" class="post-form">{% csrf_token %}
                     <h2>Turno</h2>
-                    {{ formTurno.as_p}}
-                    <h2>Horario</h2>
-                    {{ formHorario.as_p }}
+                    {{ formTurno.estado.as_p }}
                     <button type="submit" name="guardar" class="save btn btn-default">Guardar</button>
                 </form>
                 <!--<button onclick="submitForms()" type="submit" name="guardar" class="save btn btn-default">Guardar</button>-->
@@ -72,20 +70,21 @@
       </div>
 
     </div>
-  
+
 
   </body>
 
 
 
-  <script>  
-    
+  <script>
+
     /*var botonGuardar = Document.getElementByName('Guardar')[0];
 
     botonGuardar.onclick = refreshParent;
 
     /*window.onunload = refreshParent;*/
-    function submitForms() {
+
+    /*function submitForms() {
         document.getElementsByClassName("post-form")[0].submit();
         document.getElementsByClassName("post-form")[1].submit();
     }

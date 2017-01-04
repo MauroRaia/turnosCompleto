@@ -6,12 +6,14 @@
             <h2>Turno</h2>
             <form method="POST">
               {% csrf_token %}
+              {% form_input form.estado %}
               {% form_input form.medico %}
               {% form_input form.paciente %}
-              {% form_input form.horario %}
               {% form_input form.tratamiento %}
-              {{ form.estado }}
+              {% form_input form.dia %} <input type="submit" class="btn btn-success" value="Cambiar"/>
+
               <div class="pull-right">
+                <input type="hidden" id='dia' name='dia' class="btn btn-success" value="{{form.dia}}"/>
                 <input type="submit" class="btn btn-success" value="Guardar"/>
               </div>
             </form>

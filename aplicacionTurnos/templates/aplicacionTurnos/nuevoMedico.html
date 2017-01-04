@@ -17,18 +17,12 @@
             <p>Medico</p>
             <form method="POST">
               {% csrf_token %}
-              {% form_input form.nombre %}
-              {% form_input form.apellido %}
-              {% form_input form.dni %}
-              {% form_input form.telefono %}
-              {% form_input form.correo %}
-              {% form_input form.especialidad %}
-              {% form_input form.horario %}
+              {{form.as_p}}
               <div class="pull-right">
                 <input type="submit" class="btn btn-success" value="Guardar"/>
               </div>
             </form>
-            {% endblock%}
+        {% endblock %}
 
     {% block tablas %}
     <table class="table table-hover sortable">
