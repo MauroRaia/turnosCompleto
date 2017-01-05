@@ -355,21 +355,23 @@ def nuevoTurno(request, doc, dia):
     for horario in doc_horario:
         doc_inicio = getattr(horario, 'horaInicio')
         doc_fin = getattr(horario, 'horaFin')
-        print doc_inicio
-        print doc_fin
         horarios = crearHorarios(horarios, doc_inicio, doc_fin)
-        print horarios
 
     if request.method == 'POST':
-        form = turnoForm(request.POST, initial={
-        'medico':doctor,
-        'especialidad':doctor.espec,
-        'dia':datetime.datetime.strptime(dia, '%Y-%m-%d').date(),
-        'horarios':horarios
-        })
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect('/nuevoTurno')
+
+        lista_horarios = request.POST.getlist('hour')
+        print lista_horarios
+        for h in lista_horarios:
+            print h
+            form = turnoForm(request.POST, initial={
+            'medico':doctor,
+            'especialidad':doctor.espec,
+            'dia':datetime.datetime.strptime(dia, '%Y-%m-%d').date(),
+            'horarios':h
+            })
+            if form.is_valid():
+                form.save(commit=True)
+                return redirect('/nuevoTurno')
     else:
         turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
         form = turnoForm(initial={

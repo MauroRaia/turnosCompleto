@@ -12,10 +12,10 @@
               {% form_input form.tratamiento %}
               {% form_input form.dia %} <input type="submit" class="btn btn-success" value="Cambiar"/>
               <br><br>
-                <select multiple name='hour'>
+                <select name='hour' multiple >
                   {% for h in horarios %}
                     <option value='{{h}}'>{{h}}</option>
-                    {% endfor %}
+                  {% endfor %}
                 </select>
                 <br>
               <div class="pull-right">
