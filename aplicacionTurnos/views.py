@@ -339,27 +339,32 @@ def docAndDay(request):
     if request.method == 'POST':
         doc = request.POST.get('doc')
         dia = request.POST.get('date')
-#        return redirect('nuevoTurno/{doc}/{dia}'.format(doc=doc, dia=dia))
-        return nuevoTurno(request, doc, dia)
+        return redirect('nuevoTurno/{doc}/{dia}'.format(doc=doc, dia=dia))
+#        return nuevoTurno(request, doc, dia)
     else:
         return render(request, 'aplicacionTurnos/docAndDay.html', {'medicos':medicos})
 
 @login_required
 def nuevoTurno(request, doc, dia):
-
+    diaDeLaSemana = ['lunes','martes','miercoles','jueves','viernes','sabado','domingo']
+    doctor = Medico.objects.get(pk=doc)
     turnos_doc = Turno.objects.filter(estaActivo=True, pk=doc, horario__isnull=True).order_by('horario')
 
-    doc_horario = getattr(doc, 'horario')
-    doc_inicio = getattr(doc_horario, 'horaInicio')
-    doc_fin = getattr(doc_horario, 'horaFin')
-    horarios = crearHorarios(doc_inicio, doc_fin)
+    doc_horario = doctor.horario.filter(dia=diaDeLaSemana[datetime.datetime.strptime(dia, '%Y-%m-%d').date().weekday()])
+    horarios = []
+    for horario in doc_horario:
+        doc_inicio = getattr(horario, 'horaInicio')
+        doc_fin = getattr(horario, 'horaFin')
+        print doc_inicio
+        print doc_fin
+        horarios = crearHorarios(horarios, doc_inicio, doc_fin)
+        print horarios
 
     if request.method == 'POST':
         form = turnoForm(request.POST, initial={
-        'estado':pendiente,
-        'medico':doc,
-        'especialidad':doc.espec,
-        'dia':dia,
+        'medico':doctor,
+        'especialidad':doctor.espec,
+        'dia':datetime.datetime.strptime(dia, '%Y-%m-%d').date(),
         'horarios':horarios
         })
         if form.is_valid():
@@ -367,14 +372,13 @@ def nuevoTurno(request, doc, dia):
             return redirect('/nuevoTurno')
     else:
         turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
-        form = turnoForm(request.POST, initial={
-        'estado':pendiente,
-        'medico':doc,
-        'especialidad':doc.espec,
+        form = turnoForm(initial={
+        'medico':doctor,
+        'especialidad':doctor.espec,
         'dia':dia,
         'horarios':horarios
         })
-        return render(request, 'aplicacionTurnos/nuevoTurno.html', {'form': form, 'turnos':turnos})
+        return render(request, 'aplicacionTurnos/nuevoTurno.html', {'form': form, 'turnos':turnos, 'horarios':horarios})
 
 @login_required
 def editarTurno(request, pk):
@@ -547,12 +551,19 @@ def busquedaObraSocial(request):
         form = obraSocialForm()
     return render(request, 'aplicacionTurnos/nuevoObraSocial.html',{'form':form, 'obrasSociales':results})
 
-def crearHorarios(inicio, fin):
-    sec_inicio = inicio.total_seconds()
-    sec_fin = fin.total_seconds()
-    horarios = []
+def crearHorarios(horarios,inicio, fin):
+    sec_inicio = getSeconds(inicio)
+    sec_fin = getSeconds(fin)
+    #horarios = []
     h = sec_inicio
     while (h < sec_fin):
         horarios.append(datetime.timedelta(seconds=h))
         h = h + 900
     return horarios
+
+def getSeconds(a):
+    hora = a.hour*3600
+    minuto = a.minute*60
+    segundo = a.second
+    time = hora + minuto + segundo
+    return time

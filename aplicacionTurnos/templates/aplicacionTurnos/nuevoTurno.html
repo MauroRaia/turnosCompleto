@@ -11,42 +11,34 @@
               {% form_input form.paciente %}
               {% form_input form.tratamiento %}
               {% form_input form.dia %} <input type="submit" class="btn btn-success" value="Cambiar"/>
-
+              <br><br>
+                <select multiple name='hour'>
+                  {% for h in horarios %}
+                    <option value='{{h}}'>{{h}}</option>
+                    {% endfor %}
+                </select>
+                <br>
               <div class="pull-right">
-                <input type="hidden" id='dia' name='dia' class="btn btn-success" value="{{form.dia}}"/>
                 <input type="submit" class="btn btn-success" value="Guardar"/>
               </div>
-            </form>
             {% endblock%}
 
     {% block tablas %}
     <div id='tablaArriba'>
       <table class="table table-hover">
-        <font size=5><p align=center>Turnos</p></font>
+        <font size=5><p align=center>Horarios a elegir</p></font>
         <tr>
-          <td class="warning">Medico</td>
-          <td class="warning">Paciente</td>
-          <td class="warning">Horario</td>
-          <td class="warning">Tratamiento</td>
-          <td class="warning">Estado</td>
+          <td class="warning">Horarios</td>
         </tr>
       </table>
     </div>
 
     <div id='tablaAbajo'>
-      {% for turno in turnos %}
+
       <table class="table table-hover">
       <tr class="{{turno.estado}}">
-          <td>{{turno.medico.nombre}} {{turno.medico.apellido}}</td>
-          <td>{{turno.paciente.nombre}} {{turno.paciente.apellido}}</td>
-          <td>{{turno.horario.horaInicio}}</td>
-          <td>{{turno.tratamiento.nombre}}</td>
-          <td>{{turno.estado}}</td>
-          <td><a href="{% url 'aplicacionTurnos.views.editarTurno' pk=turno.pk %}"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
-          <td><a href="javascript:toggleMVM()"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
         </tr>
       </table>
-      {% endfor %}
-    </div>
-
+      </div>
+      </form>
     {% endblock %}
